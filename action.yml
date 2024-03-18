@@ -1,0 +1,47 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+name: 'Block with comment'
+author: 'Biocatch'
+description: 'Will fail and add a comment to a PR'
+inputs:
+  test:
+    description: 'the test to perform, should be "true" to pass'
+    required: true
+  fail-message:
+    description: 'The message to comment with if the test fails'
+    required: true
+  comment_tag:
+    description: 'The tag to add to the comment'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: send message if test fails in progress
+      if: ${{ inputs.test }} != 'true'
+      shell: bash
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        message: ${{ inputs.fail-message }}
+
+        mode: recreate
+        comment_tag: ${{ inputs.comment_tag }}
+
+    - name: forbid merge if test fails
+      if: ${{ inputs.test }} != 'true'
+      shell: bash
+      run: exit 1
+
+    - name: delete message if test passed
+      if: ${{ inputs.test }} = 'true'
+      shell: bash
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        message: |
+          Test passed, comment will be deleted
+
+        mode: delete
+        comment_tag: ${{ inputs.comment_tag }}
