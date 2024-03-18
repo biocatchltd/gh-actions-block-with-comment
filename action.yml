@@ -22,7 +22,6 @@ runs:
     
     - name: send message if test fails in progress
       if: ${{ inputs.test }} != 'true'
-      shell: bash
       uses: thollander/actions-comment-pull-request@v2
       with:
         message: ${{ inputs.fail-message }}
@@ -37,7 +36,6 @@ runs:
 
     - name: delete message if test passed
       if: ${{ inputs.test }} = 'true'
-      shell: bash
       uses: thollander/actions-comment-pull-request@v2
       with:
         message: |
