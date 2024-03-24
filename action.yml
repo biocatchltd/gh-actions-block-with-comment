@@ -14,14 +14,9 @@ inputs:
     required: true
 runs:
   using: "composite"
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    
+  steps:    
     - name: send message if test fails in progress
-      if: ${{ inputs.test }} != 'true'
+      if: ${{ inputs.test }} != true
       uses: thollander/actions-comment-pull-request@v2
       with:
         message: ${{ inputs.fail-message }}
@@ -30,12 +25,12 @@ runs:
         comment_tag: ${{ inputs.comment_tag }}
 
     - name: forbid merge if test fails
-      if: ${{ inputs.test }} != 'true'
+      if: ${{ inputs.test }} != true
       shell: bash
       run: exit 1
 
     - name: delete message if test passed
-      if: ${{ inputs.test }} = 'true'
+      if: ${{ inputs.test }} = true
       uses: thollander/actions-comment-pull-request@v2
       with:
         message: |
