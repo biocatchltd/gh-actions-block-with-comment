@@ -1,5 +1,5 @@
 # block-with-comment Changelog
-## Next
+## 1.1.0
 ### Fixed
 * remove checkout
 * hopefully fix string comparison
